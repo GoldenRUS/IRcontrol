@@ -1,0 +1,13 @@
+D:\dev\IRcontrol\IRcontrol\bin\Debug\IRcontrol.exe.config
+D:\dev\IRcontrol\IRcontrol\bin\Debug\IRcontrol.exe
+D:\dev\IRcontrol\IRcontrol\bin\Debug\IRcontrol.pdb
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.csprojResolveAssemblyReference.cache
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.Form1.resources
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.Properties.Resources.resources
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.csproj.GenerateResource.Cache
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.exe
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.pdb
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.Form2.resources
+D:\dev\IRcontrol\IRcontrol\obj\Debug\IRcontrol.Form3.resources
+D:\dev\IRcontrol\IRcontrol\bin\Debug\NAudio.dll
+D:\dev\IRcontrol\IRcontrol\bin\Debug\NAudio.xml
