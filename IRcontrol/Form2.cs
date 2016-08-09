@@ -59,9 +59,9 @@ namespace IRcontrol
         {
             if (comboBox1.SelectedIndex != -1)
             {
-                if (control.mode == 1) control.first[comboBox1.SelectedIndex] = textBox1.Text;
-                if (control.mode == 2) control.second[comboBox1.SelectedIndex] = textBox1.Text;
-                if (control.mode == 0)
+                if (comboBox2.SelectedIndex == 1) control.first[comboBox1.SelectedIndex] = textBox1.Text;
+                if (comboBox2.SelectedIndex == 2) control.second[comboBox1.SelectedIndex] = textBox1.Text;
+                if (comboBox2.SelectedIndex == 0)
                 {
                     control.first[comboBox1.SelectedIndex] = textBox1.Text;
                     control.second[comboBox1.SelectedIndex] = textBox1.Text;
@@ -72,8 +72,16 @@ namespace IRcontrol
                 control.memory[number, 2] = comboBox2.SelectedIndex.ToString();
 
                 Hide();
+                config cfg = new config();
+                cfg.save(control.first, control.second, control.memory);
             }
             else MessageBox.Show("Select function!", "Error", MessageBoxButtons.OK);
+            
+        }
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            
         }
     }
 }

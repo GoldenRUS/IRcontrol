@@ -52,9 +52,13 @@
             this.panel20 = new System.Windows.Forms.Panel();
             this.panel21 = new System.Windows.Forms.Panel();
             this.IRControl = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.panel22 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -248,10 +252,33 @@
             // 
             // IRControl
             // 
+            this.IRControl.ContextMenuStrip = this.contextMenu;
             this.IRControl.Icon = ((System.Drawing.Icon)(resources.GetObject("IRControl.Icon")));
             this.IRControl.Text = "IR Control";
             this.IRControl.Visible = true;
             this.IRControl.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(104, 48);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // serialPort1
             // 
@@ -314,9 +341,11 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "IR";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -349,6 +378,9 @@
         private System.IO.Ports.SerialPort serialPort1;
         private System.Windows.Forms.Panel panel22;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }
 

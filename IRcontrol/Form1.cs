@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace IRcontrol
 {
@@ -16,6 +17,7 @@ namespace IRcontrol
     {
         volume vl = new volume();
         public delegate void Delegate(string data);
+        const string name = "IRControl";
 
         Form2 form2 = new Form2();
         public Form1(string port, int rate)
@@ -24,11 +26,14 @@ namespace IRcontrol
             serialPort1.PortName = port;
             serialPort1.BaudRate = rate;
             serialPort1.Open();
+            SetAutorunValue(true);
+            WindowState = FormWindowState.Minimized;
+            ShowInTaskbar = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+           
         }
 
         private void panel1_Click(object sender, EventArgs e)
@@ -51,8 +56,28 @@ namespace IRcontrol
 
                 IRControl.BalloonTipTitle = "IRControl";
                 IRControl.BalloonTipText = "IRControl was hidden. Double click on icon in tray to show.";
-                IRControl.ShowBalloonTip(5000); 
+                IRControl.ShowBalloonTip(2000); 
 
+            }
+        }
+
+        public void SetAutorunValue(bool autorun)//if true - add to autorun, if false - remove
+        {
+            string ExePath = Application.ExecutablePath;
+            RegistryKey reg;
+            reg = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run\\");
+            try
+            {
+                if (autorun)
+                    reg.SetValue(name, ExePath);
+                else
+                    reg.DeleteValue(name);
+
+                reg.Close();
+            }
+            catch
+            {
+                MessageBox.Show("Error adding program to autorun", "Error", MessageBoxButtons.OK);
             }
         }
 
@@ -63,7 +88,7 @@ namespace IRcontrol
             if (control.mode == 2) panel22.BackgroundImage = Properties.Resources._2;
         }
 
-        private void perform(int id)
+        public static void perform(int id)
         {
             switch(id)
             {
@@ -136,9 +161,6 @@ namespace IRcontrol
                 case 22:
                     engine.pressed();
                     break;
-                case 23:
-                    engine.zero();
-                    break;
                 default:
                     break;
             }
@@ -146,8 +168,9 @@ namespace IRcontrol
 
         public void getDatainUI(string data)
         {
-            
-                if (form2.Created)
+            if (data != "0x0\r\n")//chek null-simbol
+            {
+                if (form2.Created && data != "0xFFFFFFFF\r\n")
                 {
                     form2.textBox1.Text = data;
                 }
@@ -158,15 +181,21 @@ namespace IRcontrol
                     if (control.mode == 2 && control.second != null) id = Array.FindIndex(control.second, s => s.Equals(data));
                     if (id >= 0)
                     {
-                    perform(id);
+                        perform(id);
                     }
                 }
+            }
         }
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
+            if(indata == "handshaking\r\n")//When arduino send "handshaking", it await 0
+            {
+                serialPort1.Write("0");
+            }
+            else
             BeginInvoke(new Delegate(getDatainUI), indata);
         }
 
@@ -298,6 +327,23 @@ namespace IRcontrol
         {
             form2.number = 20;
             form2.ShowDialog();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

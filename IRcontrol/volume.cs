@@ -28,7 +28,7 @@ namespace IRcontrol
                             dev.AudioEndpointVolume.Mute = level == 0;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         System.Windows.Forms.MessageBox.Show("Error with set volume", "Error", System.Windows.Forms.MessageBoxButtons.OK);
                     }
