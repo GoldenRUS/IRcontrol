@@ -24,9 +24,12 @@ namespace IRcontrol
         {
             InitComboBox();
             //load stat pressed button
-            textBox1.Text = control.memory[number, 0];
-            comboBox1.SelectedIndex = Convert.ToInt32(control.memory[number, 1], 10);
-            comboBox2.SelectedIndex = Convert.ToInt32(control.memory[number, 2], 10);
+            if (control.memory[number, 0] != "")
+            {
+                textBox1.Text = control.memory[number, 0];
+                comboBox1.SelectedIndex = Convert.ToInt32(control.memory[number, 1], 10);
+                comboBox2.SelectedIndex = Convert.ToInt32(control.memory[number, 2], 10);
+            }
         }
         private void InitComboBox()//init names of functions in ComboBox
         {
@@ -72,8 +75,7 @@ namespace IRcontrol
                 control.memory[number, 2] = comboBox2.SelectedIndex.ToString();
 
                 Hide();
-                config cfg = new config();
-                cfg.save(control.first, control.second, control.memory);
+                control.save();
             }
             else MessageBox.Show("Select function!", "Error", MessageBoxButtons.OK);
             

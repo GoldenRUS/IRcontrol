@@ -8,24 +8,21 @@ namespace IRcontrol
 {
     class engine
     {
-        private static int last = -1;
         public static void PC_Off()
         {
             System.Diagnostics.Process.Start("cmd.exe", "/C pause");//add "shutdown -s" in release
-            last = 0;
         }
         public static void Mute()
         {
             volume.mute();
-            last = 1;
         }
         public static void VolP()
         {
-
+            volume.plus();
         }
         public static void VolM()
         {
-
+            volume.minus();
         }
         public static void Mouse_Left()
         {
@@ -99,10 +96,5 @@ namespace IRcontrol
         {
 
         }
-        public static void pressed()
-        {
-            System.Diagnostics.Process.Start("cmd.exe", "/C pause");
-            Form1.perform(last);
-        }      
     }
 }

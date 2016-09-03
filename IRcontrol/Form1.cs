@@ -10,16 +10,24 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.Threading;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
 namespace IRcontrol
 {
     public partial class Form1 : Form
     {
+        private static DateTime Last;
+        private static DateTime Now;
+        private static double Elapsed;
+
         volume vl = new volume();
         public delegate void Delegate(string data);
         const string name = "IRControl";
+        private static int lastID = -1;
 
         Form2 form2 = new Form2();
+        private static double pressdDelay = 1000;//Max delay between received codes in milliseconds.
+
         public Form1(string port, int rate)
         {
             InitializeComponent();
@@ -54,9 +62,9 @@ namespace IRcontrol
             {
                 Hide();
 
-                IRControl.BalloonTipTitle = "IRControl";
+                /*IRControl.BalloonTipTitle = "IRControl";
                 IRControl.BalloonTipText = "IRControl was hidden. Double click on icon in tray to show.";
-                IRControl.ShowBalloonTip(2000); 
+                IRControl.ShowBalloonTip(2000); */ //balloon tips.
 
             }
         }
@@ -90,7 +98,17 @@ namespace IRcontrol
 
         public static void perform(int id)
         {
-            switch(id)
+            Console.Write(id);
+            if (id == 22)//if button pressed(code FFFFFFFF)
+            {
+                Now = DateTime.Now;
+                Elapsed = Now.Subtract(Last).TotalMilliseconds;
+                if (Elapsed < pressdDelay) id = lastID;
+                else return;
+            }
+            else lastID = id;
+            Last = DateTime.Now;
+            switch (id)
             {
                 case 0:
                     engine.PC_Off();
@@ -158,21 +176,20 @@ namespace IRcontrol
                 case 21:
                     engine._9();
                     break;
-                case 22:
-                    engine.pressed();
-                    break;
                 default:
                     break;
+                
             }
         }
 
         public void getDatainUI(string data)
         {
-            if (data != "0x0\r\n")//chek null-simbol
+            if (data != "0")//check null-symbol
             {
-                if (form2.Created && data != "0xFFFFFFFF\r\n")
+                if (form2.Created)//It looks as shit, but you can't use &&
                 {
-                    form2.textBox1.Text = data;
+                    if (data != "FFFFFFFF")
+                        form2.textBox1.Text = data;
                 }
                 else
                 {
@@ -190,14 +207,14 @@ namespace IRcontrol
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadExisting();
-            if(indata == "handshaking\r\n")//When arduino send "handshaking", it await 0
+            string indata = Regex.Replace(sp.ReadExisting(), @"\r\n", "");//read from port and replace \r\n
+            if (indata == "handshaking")//When arduino send "handshaking", it waiting 0 in response
             {
                 serialPort1.Write("0");
             }
             else
-            BeginInvoke(new Delegate(getDatainUI), indata);
-        }
+                BeginInvoke(new Delegate(getDatainUI), indata);
+            }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -342,6 +359,31 @@ namespace IRcontrol
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void configToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void aboutUsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }

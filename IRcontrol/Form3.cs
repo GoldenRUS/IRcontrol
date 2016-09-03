@@ -54,6 +54,7 @@ namespace IRcontrol
                     }
                 }
             }
+            control.load();
         }
 
         private void panel1_Click(object sender, EventArgs e)
